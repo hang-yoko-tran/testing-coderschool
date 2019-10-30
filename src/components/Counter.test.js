@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { shallow } from 'enzyme';
+import { shallow, mount} from 'enzyme';
 import Counter from './Counter'
 import configureMockStore from 'redux-mock-store';
 import { incrementCounter } from '../actions/actions';
 import { counterReducer } from '../reducers/reducers'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import App from '../App'
 
 
 
@@ -48,3 +51,18 @@ beforeEach(() => {
   });
 
 })
+
+describe('Counter integration test', () => {
+    let store;
+  
+    beforeEach(() => {
+      store = createStore(counterReducer);
+    });
+  
+    it('increments the counter text when the button is clicked', () => {
+      const wrapper = mount(<Provider store={store}><App /></Provider>);
+      wrapper.find('button').simulate('click');
+      wrapper.update();
+      expect(wrapper.find('h1').text()).toEqual('1');
+    })
+  })
